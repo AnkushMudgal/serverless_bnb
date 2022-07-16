@@ -1,4 +1,5 @@
 import google.api_core.exceptions
+from google.api_core import retry
 from google.cloud import pubsub_v1
 from google.oauth2 import service_account
 
@@ -51,22 +52,32 @@ def publish_messages(project_id, topic_id, message):
         return {"error": "Internal Server Error"}
 
 
-def pull_messages(project_id, subscription_id):
+def pull_messages(project_id, subscription_id, num_messages):
     subscriber = get_subscription_client()
     subscription_path = subscriber.subscription_path(project_id, subscription_id)
 
-    def callback(message):
-        print(f"Received {message}.")
-        message.ack()
-
-    streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
-
     with subscriber:
-        try:
-            streaming_pull_future.result()
-        except TimeoutError:
-            streaming_pull_future.cancel()
-            streaming_pull_future.result()
+        response = subscriber.pull(
+            request={"subscription": subscription_path, "max_messages": num_messages},
+            retry=retry.Retry(deadline=300),
+        )
+
+        if len(response.received_messages) == 0:
+            return {"success": []}
+
+        messages = []
+        ack_ids = []
+
+        for received_message in response.received_messages:
+            messages.append(received_message.message.data.decode("utf-8"))
+            ack_ids.append(received_message.ack_id)
+
+        subscriber.acknowledge(
+            request={"subscription": subscription_path, "ack_ids": ack_ids}
+        )
+
+        return {"success": messages}
+
 
 def message_passing(request):
     """Responds to any HTTP request.
@@ -99,4 +110,4 @@ if __name__ == "__main__":
     # print(create_topic(project_id, topic_id))
     # print(create_subscription(project_id, topic_id, subscription_id))
     # print(publish_messages(project_id, topic_id, "Order 10 successfully Placed"))
-    # pull_messages(project_id, subscription_id)
+    # print(pull_messages(project_id, subscription_id, 10))
