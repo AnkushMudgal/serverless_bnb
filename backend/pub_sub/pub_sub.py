@@ -88,6 +88,21 @@ def message_passing(request):
         Response object using
         `make_response <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>`.
     """
+
+    if request.method == 'OPTIONS':
+            headers = {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': '*',
+                'Access-Control-Allow-Headers': 'Content-Type',
+                'Access-Control-Max-Age': '3600'
+            }
+
+            return '', 204, headers
+
+        headers = {
+            'Access-Control-Allow-Origin': '*'
+        }
+
     request_json = request.get_json()
     response = {}
     if "type" in request_json and "values" in request_json:
@@ -99,7 +114,7 @@ def message_passing(request):
         elif current_type == "PUBLISH_MESSAGES":
             response = publish_messages(values["project_id"], values["topic_id"], values['message'])
 
-    return response
+    return response, 200, headers
 
 
 if __name__ == "__main__":
