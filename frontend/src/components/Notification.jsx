@@ -7,6 +7,7 @@ import axios from "axios";
 
 function Notification() {
     const [isOpen, toggleIcon] = useState(false);
+    const url = "https://us-central1-serverless-5410-b00885768.cloudfunctions.net"
 
     const prevIsOpen = usePrevious(isOpen);
 
@@ -17,7 +18,7 @@ function Notification() {
         if (prevIsOpen !== isOpen) {
             if (isOpen) {
                 setNotificationsLoading(true);
-                axios.post("/message-passing/", {
+                axios.post(`${url}/message-passing/`, {
                     "type": "PULL_MESSAGES",
                     "values": {
                         "project_id": "serverless-5410-b00885768",
