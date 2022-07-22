@@ -23,3 +23,11 @@ body {
 .black {
     color: black;
 }
+
+.room-booking .selected{
+    background: green;
+}
+
+.fit-content {
+    width: fit-content;
+}
