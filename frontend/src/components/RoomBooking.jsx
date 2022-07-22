@@ -63,8 +63,8 @@ function RoomBooking() {
             <h3 className="mb-4">Book a room</h3>
             <Form className="room-booking" onSubmit={handleSubmit(onSubmit)}>
 
-                <Form.Group className="mb-3" controlId="formBasicAvailableRooms">
-                    <Form.Label>Room Type</Form.Label>
+                    <Form.Group className="mb-3" controlId="formBasicAvailableRooms">
+                        <Form.Label>Room Type</Form.Label>
                     <Controller
                         name={"availableRooms"}
                         control={control}
