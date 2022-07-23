@@ -3,7 +3,8 @@ import Swal from "sweetalert2";
 export const routes = {
     home: "/",
     roomBooking: "/room-booking",
-    kitchenService: "/kitchen-service"
+    kitchenService: "/kitchen-service",
+    tourService: "/tour-service"
 };
 
 
