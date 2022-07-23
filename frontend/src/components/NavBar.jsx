@@ -7,11 +7,11 @@ function CustomNavBar() {
         event.preventDefault();
         try {
           Auth.signOut();
-          localStorage.setItem("LoggedStatus", false)
           axios.post("https://us-central1-serverlessprojects22.cloudfunctions.net/updateStatus", {
             email_id: localStorage.getItem('CurrentUser'),
             logged_in: true
           })
+            localStorage.setItem("LoggedStatus", false)
           document.location.href = "/";
         }catch(error) {
           console.log(error);
@@ -21,21 +21,21 @@ function CustomNavBar() {
         <nav className="navbar navbar-dark bg-dark p-2 d-flex justify-content-between">
             <div>Bed & Breakfast</div>
             <div className="buttons">
-                {localStorage.getItem("LoggedStatus") == "false" ? 
-                (
-                  <div>
-                    <a href="/register"className="button is-dark">
-                      <strong>Register</strong>
-                    </a>
-                    <a href="/login" className="button is-dark">
-                      <strong>Log in</strong>
-                    </a>
-                  </div>
-                ): (
+                {localStorage.getItem("LoggedStatus") == "true" ?
+               (
                   <div onClick={logout} className="button is-dark">
                     Log out
                   </div>
-                )}
+                ): (
+                        <div>
+                            <a href="/register"className="button is-dark">
+                                <strong>Register</strong>
+                            </a>
+                            <a href="/login" className="button is-dark">
+                                <strong>Log in</strong>
+                            </a>
+                        </div>
+                    )}
             </div>
             <Notification/>
         </nav>
