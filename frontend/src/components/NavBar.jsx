@@ -1,5 +1,6 @@
 import {Notification} from "./Notification";
 import { Auth } from 'aws-amplify';
+import axios from "axios";
 
 function CustomNavBar() {
     const logout = async (event) => {
@@ -7,6 +8,10 @@ function CustomNavBar() {
         try {
           Auth.signOut();
           localStorage.setItem("LoggedStatus", false)
+          axios.post("https://us-central1-serverlessprojects22.cloudfunctions.net/updateStatus", {
+            email_id: localStorage.getItem('CurrentUser'),
+            logged_in: true
+          })
           document.location.href = "/";
         }catch(error) {
           console.log(error);

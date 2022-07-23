@@ -22,6 +22,11 @@ export class Login extends Component {
     try {
       const signin = await Auth.signIn(this.state.registeredEmail, this.state.password);
       localStorage.setItem("LoggedStatus", true)
+      localStorage.setItem("CurrentUser", this.state.registeredEmail)
+      axios.post("https://us-central1-serverlessprojects22.cloudfunctions.net/updateStatus", {
+        email_id: this.state.registeredEmail,
+        logged_in: true
+      })
       alert("sign-in successful")
     }catch(form_error) {
       this.validateFormFields(form_error)
