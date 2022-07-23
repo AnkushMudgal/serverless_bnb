@@ -62,6 +62,7 @@ export class Register extends Component {
           console.log(resp)
         })
         alert("Please verify your email and then log in!")
+        localStorage.setItem("")
         document.location.href = routes.login
       } catch (cloud_error) {
         this.validateForm(cloud_error)

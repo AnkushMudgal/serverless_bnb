@@ -24,7 +24,7 @@ export  class ChangePassword extends Component {
         await Auth.forgotPasswordSubmit(
           this.state.registeredEmail,
           this.state.code,
-          this.state.newPassword
+          this.state.updatedPassword
         );
         alert("Password changed Successfully!!")
         document.location.href = routes.login;
@@ -68,12 +68,12 @@ export  class ChangePassword extends Component {
             </div>
             <div className="field">
               <p className="control">
-                <input className="input" id="verificationCode" placeholder="Enter verification code" type="text" value={this.state.code} onChange={this.onModification}/>
+                <input className="input" id="code" placeholder="Enter verification code" type="text" value={this.state.code} onChange={this.onModification}/>
               </p>
             </div>
             <div className="field">
               <p className="control">
-                <input className="input" id="newPassword" placeholder="Updated password" value={this.state.updatedPassword} type="password" onChange={this.onModification}/>
+                <input className="input" id="updatedPassword" placeholder="Updated password" value={this.state.updatedPassword} type="password" onChange={this.onModification}/>
               </p>
             </div>
             <div className="field">

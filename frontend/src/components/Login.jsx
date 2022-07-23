@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { Auth } from "aws-amplify";
+import axios from "axios";
+import {useHistory} from "react-router-dom";
+import {routes} from "../constants";
 
 
 export class Login extends Component {
@@ -14,20 +17,21 @@ export class Login extends Component {
       [event.target.id]: event.target.value
     });
   };
-  
+
+
   submitForm = async event => {
     event.preventDefault();
     const formvalid = this.validateFormFields()
     if(formvalid){
     try {
       const signin = await Auth.signIn(this.state.registeredEmail, this.state.password);
-      localStorage.setItem("LoggedStatus", true)
       localStorage.setItem("CurrentUser", this.state.registeredEmail)
       axios.post("https://us-central1-serverlessprojects22.cloudfunctions.net/updateStatus", {
         email_id: this.state.registeredEmail,
         logged_in: true
-      })
-      alert("sign-in successful")
+      }).then((res) => {
+        document.location.href = routes.questionAndAnswer;
+      });
     }catch(form_error) {
       this.validateFormFields(form_error)
     }

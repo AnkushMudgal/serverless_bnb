@@ -5,6 +5,8 @@ import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import { FormLabel } from "@mui/material"
 import axios from "axios"
+import {useHistory} from "react-router-dom";
+import {routes} from "../constants";
 
 export default function CeaserCipherAuth() {
     const paperStyle = {
@@ -39,6 +41,8 @@ export default function CeaserCipherAuth() {
         } else setDisableButton(true)
     }
 
+    const history = useHistory();
+
     //TODO: cloudFunction
     const handleSubmit = async (e) => {
         await axios
@@ -46,14 +50,16 @@ export default function CeaserCipherAuth() {
                 "https://us-central1-b00904831-a4-partb.cloudfunctions.net/ceaser_cipher/decryptCipher",
                 {
                     encryptedCode: encryptedCipher,
-                    key: location.state,
+                    emailID: localStorage.getItem("CurrentUser"),
                 }
             )
             .then((res) => {
                 if (res.data && decryptedCipher === res.data) {
-                    navigate("/")
+                    history.push(routes.home);
+                    localStorage.setItem("LoggedStatus", true)
                 } else setErrorMessage("Incorrect Decrypted Cipher Text Entered")
             })
+
     }
 
     return (

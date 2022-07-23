@@ -15,7 +15,7 @@ function Routing() {
         <BrowserRouter>
             <Switch>
                 <ProtectedRoute exact path={routes.home}>
-                    <Redirect to={routes.roomBooking}/>
+                    <Redirect to={routes.registration}/>
                 </ProtectedRoute>
 
                 <ProtectedRoute exact path={routes.roomBooking}>
