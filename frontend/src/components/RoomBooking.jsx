@@ -43,6 +43,7 @@ function RoomBooking() {
             axios.post("https://52ggkifzash6obohoh7kjxyzpu0jtcvv.lambda-url.us-east-1.on.aws/", json).then((res) => {
                 if (res.data.Status === "Booked") {
                     showPopup("success", "Successfully Booked", `Your room has been successfully booked. Your reference number is ${res.data.BookingId}`, () => {
+                        localStorage.setItem("bookingId", res.data.BookingId);
                         history.push(routes.kitchenService);
                     });
                 }
@@ -63,8 +64,8 @@ function RoomBooking() {
             <h3 className="mb-4">Book a room</h3>
             <Form className="room-booking" onSubmit={handleSubmit(onSubmit)}>
 
-                    <Form.Group className="mb-3" controlId="formBasicAvailableRooms">
-                        <Form.Label>Room Type</Form.Label>
+                <Form.Group className="mb-3" controlId="formBasicAvailableRooms">
+                    <Form.Label>Room Type</Form.Label>
                     <Controller
                         name={"availableRooms"}
                         control={control}
