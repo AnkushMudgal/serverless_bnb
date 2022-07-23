@@ -9,6 +9,8 @@ export const routes = {
     forgotPassword: "/forgotpassword",
     changePassword: "/changepassword",
     tourService: "/tour-service",
+    questionAndAnswer : "/question-Answer",
+    ceaserCipher: "/ceaser-cipher"
 };
 
 

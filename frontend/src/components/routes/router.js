@@ -7,6 +7,8 @@ import {Register} from "../Registration"
 import {Login} from "../Login"
 import {ForgotPassword} from "../ForgotPassword"
 import {ChangePassword} from "../ChangePassword"
+import QuestionAndAnswer from "../questionAndAnswer";
+import CeaserCipherAuth  from "../ceaserCipher";
 
 function Routing() {
     return (
@@ -39,6 +41,15 @@ function Routing() {
                 <ProtectedRoute exact path={routes.changePassword}>
                     <ChangePassword/>
                 </ProtectedRoute>
+
+                <ProtectedRoute exact path={routes.questionAndAnswer}>
+                    <QuestionAndAnswer/>
+                </ProtectedRoute>
+
+                <ProtectedRoute exact path={routes.ceaserCipher}>
+                    <CeaserCipherAuth/>
+                </ProtectedRoute>
+
             </Switch>
         </BrowserRouter>
     )
