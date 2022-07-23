@@ -24,6 +24,16 @@ body {
     color: black;
 }
 
+.center {
+    margin: auto;
+    border: 3px solid #73AD21;
+    padding: 10px;
+  }
+
+
+.center iframe {
+    width: 100%;
+}
 .room-booking .selected{
     background: green;
 }
