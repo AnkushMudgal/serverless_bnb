@@ -4,7 +4,11 @@ export const routes = {
     home: "/",
     roomBooking: "/room-booking",
     kitchenService: "/kitchen-service",
-    tourService: "/tour-service"
+    registration: "/register",
+    login: "/login",
+    forgotPassword: "/forgotpassword",
+    changePassword: "/changepassword",
+    tourService: "/tour-service",
 };
 
 
