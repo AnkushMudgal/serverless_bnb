@@ -29,10 +29,11 @@ function RoomBooking() {
             showPopup("error", "Error", "Please Enter all the fields");
         } else {
 
-            data["checkOutDate"] = new Date();
-            data["checkOutDate"].setDate(data["checkInDate"].getDate() + parseInt(data['duration']));
-
             const dateFormat = 'DD MM YYYY'
+
+            data["checkOutDate"] = new Date(data["checkInDate"]);
+            data["checkOutDate"].setDate(data["checkOutDate"].getDate() + parseInt(data['duration']));
+
             const json = {
                 RoomType: data['availableRooms'],
                 UserId: "amudgal",
