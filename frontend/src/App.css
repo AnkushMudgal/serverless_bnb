@@ -34,3 +34,10 @@ body {
 .center iframe {
     width: 100%;
 }
+.room-booking .selected{
+    background: green;
+}
+
+.fit-content {
+    width: fit-content;
+}

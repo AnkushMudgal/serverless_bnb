@@ -1,3 +1,22 @@
+import Swal from "sweetalert2";
+
 export const routes = {
-    home: "/"
+    home: "/",
+    roomBooking: "/room-booking",
+    kitchenService: "/kitchen-service",
+    registration: "/register",
+    login: "/login",
+    forgotPassword: "/forgotpassword",
+    changePassword: "/changepassword",
+    tourService: "/tour-service",
+    questionAndAnswer : "/question-Answer",
+    ceaserCipher: "/ceaser-cipher"
+};
+
+
+export const showPopup = (type, title, msg, callback = () => {
+}) => {
+    Swal.fire(title, msg, type).then(() => {
+        callback();
+    });
 };
