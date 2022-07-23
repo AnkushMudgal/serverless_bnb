@@ -7,7 +7,26 @@ import {Loader} from "./Loader";
 import {routes, showPopup} from "../constants";
 import moment from "moment";
 import {useHistory} from "react-router-dom";
+import { firestoreDB } from '../firebase-config';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 
+
+
+const storeDataInFirestore = async () => {
+    try {
+      
+        const docRef = await addDoc(collection(firestoreDB, "feedback"), {
+            userId: '123',
+            rooms: '1',  
+            feedback: 'I am very happy',
+            timestamp: serverTimestamp()
+        });
+        
+     
+    } catch (e) {
+        console.error("Error adding user: ", e);
+    }
+}
 
 function RoomBooking() {
 
@@ -28,6 +47,10 @@ function RoomBooking() {
         if (error) {
             showPopup("error", "Error", "Please Enter all the fields");
         } else {
+            console.log("sending feedback");
+            storeDataInFirestore();
+            data["checkOutDate"] = new Date();
+            data["checkOutDate"].setDate(data["checkInDate"].getDate() + parseInt(data['duration']));
 
             const dateFormat = 'DD MM YYYY'
 
