@@ -3,6 +3,7 @@ import {Routing} from "./components/routes/router";
 import {CustomNavBar} from "./components/NavBar";
 import {useEffect, useState} from "react";
 import {Loader} from "./components/Loader";
+import {LexBot} from "./components/LexBot";
 
 function App() {
 
@@ -15,7 +16,10 @@ function App() {
     return (
         loading ? <Loader/> : (<div className="h-100">
                 <CustomNavBar/>
-                <Routing/>
+                <div>
+                    <Routing/>
+                    <LexBot/>
+                </div>
             </div>
         )
     );
