@@ -53,7 +53,7 @@ function RoomBooking() {
                         history.push(routes.kitchenService);
                     });
 
-                    const json = {
+                    const publishJSON = {
                         "type": "PUBLISH_MESSAGES",
                         "values": {
                             "project_id": projectID,
@@ -62,7 +62,7 @@ function RoomBooking() {
                         }
                     };
 
-                    axios.post(pubSubURL, json).then((ele) => {
+                    axios.post(pubSubURL, publishJSON).then((ele) => {
                         console.log(ele);
                     }).catch((err) => {
                         console.log(err);

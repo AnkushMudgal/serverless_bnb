@@ -64,6 +64,7 @@ export class Register extends Component {
         };
 
         axios.post(pubSubURL, json).then((ele) => {
+
           const newJSON = {
             "type": "CREATE_SUBSCRIPTION",
             "values": {
@@ -75,6 +76,9 @@ export class Register extends Component {
 
           axios.post(pubSubURL, newJSON).then((ele) => {
               console.log(ele);
+            alert("Please verify your email and then log in!")
+            localStorage.setItem("LoggedStatus", false)
+            document.location.href = routes.login
           }).catch((err) => {
             console.log(err);
           });
@@ -83,15 +87,13 @@ export class Register extends Component {
           console.log(err);
         });
 
-        // axios.post("https://pvbe4bzseyw3j7z2zu75tdrhhy0qphrg.lambda-url.us-east-1.on.aws/", dynamoObject).then((resp) => {
-        //   console.log(resp)
-        // })
-        // const abc = await axios.post("https://us-central1-serverlessprojects22.cloudfunctions.net/storeCipher", firestoreObject).then((resp) => {
-        //   console.log(resp)
-        // })
-        // alert("Please verify your email and then log in!")
-        // localStorage.setItem("LoggedStatus", false)
-        // document.location.href = routes.login
+        axios.post("https://pvbe4bzseyw3j7z2zu75tdrhhy0qphrg.lambda-url.us-east-1.on.aws/", dynamoObject).then((resp) => {
+          console.log(resp)
+        })
+        const abc = await axios.post("https://us-central1-serverlessprojects22.cloudfunctions.net/storeCipher", firestoreObject).then((resp) => {
+          console.log(resp)
+        })
+
       } catch (cloud_error) {
         this.validateForm(cloud_error)
       }
