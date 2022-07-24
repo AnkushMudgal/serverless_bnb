@@ -5,8 +5,8 @@ import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import { FormLabel } from "@mui/material"
 import axios from "axios"
-import { useHistory } from "react-router-dom"
-import { routes } from "../constants"
+import { useHistory } from "react-router-dom";
+import { routes } from "../constants";
 
 export default function CeaserCipherAuth() {
     const paperStyle = {
@@ -16,7 +16,6 @@ export default function CeaserCipherAuth() {
         margin: "20px auto",
     }
 
-    const history = useHistory();
     const [encryptedCipher, setEncryptedCipher] = React.useState("")
     const btnstyle = { margin: "8px 0" }
     const [disableButton, setDisableButton] = React.useState(true)
@@ -42,6 +41,8 @@ export default function CeaserCipherAuth() {
         } else setDisableButton(true)
     }
 
+    const history = useHistory();
+
     //TODO: cloudFunction
     const handleSubmit = async (e) => {
         await axios
@@ -49,14 +50,16 @@ export default function CeaserCipherAuth() {
                 "https://us-central1-b00904831-a4-partb.cloudfunctions.net/ceaser_cipher/decryptCipher",
                 {
                     encryptedCode: encryptedCipher,
-                    emailID: localStorage.getItem("CurrentUser")
+                    emailID: localStorage.getItem("CurrentUser"),
                 }
             )
             .then((res) => {
-                if (res.data && decryptedCipher === res.data.decryptedCipher) {
-                    history.push(routes.home)
+                if (res.data && decryptedCipher === res.data) {
+                    history.push(routes.home);
+                    localStorage.setItem("LoggedStatus", true)
                 } else setErrorMessage("Incorrect Decrypted Cipher Text Entered")
             })
+
     }
 
     return (

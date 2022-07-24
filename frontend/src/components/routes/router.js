@@ -1,4 +1,4 @@
-import {BrowserRouter, Redirect, Switch} from "react-router-dom";
+import {BrowserRouter, Redirect, Switch, Route} from "react-router-dom";
 import {ProtectedRoute} from "./ProtectedRoute";
 import {routes} from "../../constants";
 import {RoomBooking} from "../RoomBooking";
@@ -9,13 +9,14 @@ import {ForgotPassword} from "../ForgotPassword"
 import {ChangePassword} from "../ChangePassword"
 import QuestionAndAnswer from "../questionAndAnswer";
 import CeaserCipherAuth  from "../ceaserCipher";
+import { Analytics } from "../Analytics"
 
 function Routing() {
     return (
         <BrowserRouter>
             <Switch>
                 <ProtectedRoute exact path={routes.home}>
-                    <Redirect to={routes.roomBooking}/>
+                    <Redirect to={routes.registration}/>
                 </ProtectedRoute>
 
                 <ProtectedRoute exact path={routes.roomBooking}>
@@ -50,9 +51,14 @@ function Routing() {
                     <CeaserCipherAuth/>
                 </ProtectedRoute>
 
+                <Route exact path="/analysis">
+                    <Analytics />
+                </Route>
+
             </Switch>
+            
         </BrowserRouter>
     )
 }
 
-export {Routing}
+export { Routing }
