@@ -7,26 +7,6 @@ import {Loader} from "./Loader";
 import {routes, showPopup} from "../constants";
 import moment from "moment";
 import {useHistory} from "react-router-dom";
-import { firestoreDB } from '../firebase-config';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-
-
-
-const storeDataInFirestore = async () => {
-    try {
-      
-        const docRef = await addDoc(collection(firestoreDB, "feedback"), {
-            userId: '123',
-            rooms: '1',  
-            feedback: 'I am very happy',
-            timestamp: serverTimestamp()
-        });
-        
-     
-    } catch (e) {
-        console.error("Error adding user: ", e);
-    }
-}
 
 function RoomBooking() {
 
@@ -48,11 +28,10 @@ function RoomBooking() {
             showPopup("error", "Error", "Please Enter all the fields");
         } else {
             console.log("sending feedback");
-            storeDataInFirestore();
             data["checkOutDate"] = new Date();
             data["checkOutDate"].setDate(data["checkInDate"].getDate() + parseInt(data['duration']));
 
-            const dateFormat = 'DD MM YYYY'
+            const dateFormat = 'YYYY-MM-DD'
 
             data["checkOutDate"] = new Date(data["checkInDate"]);
             data["checkOutDate"].setDate(data["checkOutDate"].getDate() + parseInt(data['duration']));
@@ -67,7 +46,9 @@ function RoomBooking() {
             axios.post("https://52ggkifzash6obohoh7kjxyzpu0jtcvv.lambda-url.us-east-1.on.aws/", json).then((res) => {
                 if (res.data.Status === "Booked") {
                     showPopup("success", "Successfully Booked", `Your room has been successfully booked. Your reference number is ${res.data.BookingId}`, () => {
-                        localStorage.setItem("bookingId", res.data.BookingId);
+                        json["duration"] = data["duration"];
+                        const newJson = {bookingId: res.data.BookingId, ...json};
+                        localStorage.setItem("booking", JSON.stringify(newJson));
                         history.push(routes.kitchenService);
                     });
                 }

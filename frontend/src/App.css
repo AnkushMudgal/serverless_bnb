@@ -41,3 +41,11 @@ body {
 .fit-content {
     width: fit-content;
 }
+
+#bot {
+    bottom: 0;
+    position: absolute;
+    right: 0;
+    height: 600px;
+    background: cadetblue;
+}
