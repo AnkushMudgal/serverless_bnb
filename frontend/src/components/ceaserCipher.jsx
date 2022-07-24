@@ -43,18 +43,18 @@ export default function CeaserCipherAuth() {
 
     const history = useHistory();
 
-    //TODO: cloudFunction
     const handleSubmit = async (e) => {
         await axios
             .post(
-                "https://us-central1-b00904831-a4-partb.cloudfunctions.net/ceaser_cipher/decryptCipher",
+                "https://us-central1-b00904831-a4-partb.cloudfunctions.net/ceaserCipher/decryptCipher",
                 {
                     encryptedCode: encryptedCipher,
                     emailID: localStorage.getItem("CurrentUser"),
+                    decryptedCode: decryptedCipher
                 }
             )
             .then((res) => {
-                if (res.data && decryptedCipher === res.data) {
+                if (res.data && res.data.mactched) {
                     history.push(routes.home);
                     localStorage.setItem("LoggedStatus", true)
                 } else setErrorMessage("Incorrect Decrypted Cipher Text Entered")
