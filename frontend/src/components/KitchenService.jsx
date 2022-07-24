@@ -14,7 +14,7 @@ function KitchenService() {
     const history = useHistory();
 
     useEffect(() => {
-        if (localStorage.getItem("bookingId")) {
+        if (localStorage.getItem("booking")) {
             axios.get("https://behncx2zg3xztvkq7jqwjq5ou40nuwsy.lambda-url.us-east-1.on.aws/").then((ele) => {
                 setItems(ele.data.body);
 
@@ -51,11 +51,13 @@ function KitchenService() {
             const selectedFoodItems = items.filter((ele) => ids.includes(ele.itemID));
             const json = {};
             json['emailID'] = "abc@gmail.com";
-            json['bookingId'] = localStorage.getItem("bookingId");
+            const booking = JSON.parse(localStorage.getItem("booking"));
+            json['bookingID'] = booking['bookingId'];
 
             const tempJSON = [];
             selectedFoodItems.forEach((ele) => {
-                tempJSON.push({itemName: ele.name, price: ele.price});
+                console.log(ele);
+                tempJSON.push({itemName: ele.name, price: ele.price, itemID: ele.itemID});
             });
 
             json['items'] = tempJSON;

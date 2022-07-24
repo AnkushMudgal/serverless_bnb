@@ -29,6 +29,17 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <iframe src="" width="400" height="400" id="bot"></iframe>
+    <script>
+      const unAuthRoutes = ["register", "login", "forgotpassword", "changepassword", "question-Answer", "ceaser-cipher"];
+      const item = window.location.href.split("/");
+      const lastItem = item[item.length - 1];
+      if (unAuthRoutes.includes(lastItem)) {
+          document.getElementById("bot").src = "general_bot.html";
+      } else {
+          document.getElementById("bot").src = "bot.html";
+      }
+    </script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

@@ -10,7 +10,8 @@ export const routes = {
     changePassword: "/changepassword",
     tourService: "/tour-service",
     questionAndAnswer : "/question-Answer",
-    ceaserCipher: "/ceaser-cipher"
+    ceaserCipher: "/ceaser-cipher",
+    invoice: "/invoice"
 };
 
 
@@ -19,4 +20,12 @@ export const showPopup = (type, title, msg, callback = () => {
     Swal.fire(title, msg, type).then(() => {
         callback();
     });
+};
+
+export const tourType = () => {
+    return {
+        Deluxe: 5,
+        King: 4,
+        Queen: 3
+    }
 };
