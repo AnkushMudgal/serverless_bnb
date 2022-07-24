@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {Loader} from "./Loader";
-import {routes, showPopup} from "../constants";
+import {projectID, pubSubURL, routes, showPopup} from "../constants";
 import moment from "moment";
 import {useHistory} from "react-router-dom";
 
@@ -38,11 +38,12 @@ function RoomBooking() {
 
             const json = {
                 RoomType: data['availableRooms'],
-                UserId: "amudgal",
+                UserId: localStorage.getItem("CurrentUser"),
                 CheckInDate: moment(data["checkInDate"]).format(dateFormat),
                 CheckOutDate: moment(data["checkOutDate"]).format(dateFormat),
                 CheckInTime: moment(data['checkInTime']).format('hh A')
             }
+
             axios.post("https://52ggkifzash6obohoh7kjxyzpu0jtcvv.lambda-url.us-east-1.on.aws/", json).then((res) => {
                 if (res.data.Status === "Booked") {
                     showPopup("success", "Successfully Booked", `Your room has been successfully booked. Your reference number is ${res.data.BookingId}`, () => {
@@ -51,6 +52,22 @@ function RoomBooking() {
                         localStorage.setItem("booking", JSON.stringify(newJson));
                         history.push(routes.kitchenService);
                     });
+
+                    const publishJSON = {
+                        "type": "PUBLISH_MESSAGES",
+                        "values": {
+                            "project_id": projectID,
+                            "topic_id": localStorage.getItem("CurrentUser").split("@")[0],
+                            "message": "Booking with id " + res.data.BookingId + " successfully created"
+                        }
+                    };
+
+                    axios.post(pubSubURL, publishJSON).then((ele) => {
+                        console.log(ele);
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+
                 }
             }).catch((err) => {
                 showPopup("error", "Error", err.toString());

@@ -205,6 +205,14 @@ function Invoice() {
                                             <div><b>Tour Name: </b></div>
                                             <div>{ele.tourName}</div>
                                         </div>
+                                        <div className="d-flex">
+                                            <div><b>Tour Start Date: </b></div>
+                                            <div>{ele.startTime}</div>
+                                        </div>
+                                        <div className="d-flex">
+                                            <div><b>Tour End Date: </b></div>
+                                            <div>{ele.endTime}</div>
+                                        </div>
                                     </div>
                                 )
                             })}

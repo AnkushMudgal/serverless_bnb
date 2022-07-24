@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import axios from "axios";
-import {routes, showPopup} from "../constants";
+import {projectID, pubSubURL, routes, showPopup} from "../constants";
 import {Button, Form} from "react-bootstrap";
 import {Controller, useForm} from "react-hook-form";
 import Select from "react-select";
@@ -64,6 +64,22 @@ function KitchenService() {
 
             axios.post("https://hwadzlt7fjy6kqinqunbxilm3a0skdda.lambda-url.us-east-1.on.aws/", json).then((ele) => {
                 showPopup("success", "Successfully Booked", `Your food order has been successfully placed.}`, () => {
+
+                    const json = {
+                        "type": "PUBLISH_MESSAGES",
+                        "values": {
+                            "project_id": projectID,
+                            "topic_id": localStorage.getItem("CurrentUser").split("@")[0],
+                            "message": "Food Order for " + tempJSON.length + " item(s) successfully placed"
+                        }
+                    };
+
+                    axios.post(pubSubURL, json).then((ele) => {
+                        console.log(ele);
+                    }).catch((err) => {
+                        console.log(err);
+                    });
+
                     history.push(routes.tourService);
                 });
             }).catch((err) => {

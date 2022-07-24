@@ -1,16 +1,22 @@
 import {useEffect, useState} from "react";
-import {routes, showPopup, tourType} from "../constants";
+import {projectID, pubSubURL, routes, showPopup, tourType} from "../constants";
 import axios from "axios";
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import {addDoc, collection,} from 'firebase/firestore';
+import {addDoc, collection, serverTimestamp} from 'firebase/firestore';
 import {firestoreDB} from "../firebase-config";
 import {Loader} from "./Loader";
 import {Button} from "react-bootstrap";
+import {useHistory} from "react-router-dom";
 
 
 const storeDataInFirestore = async ({userId, tourId, tourName}) => {
     try {
+        const endTime = new Date();
+        endTime.setDate(endTime.getDate() + tourId);
+
         const docRef = await addDoc(collection(firestoreDB, "tourInfo"), {
+            currentTime: new Date(),
+            endTime: endTime,
+            timeStamp: serverTimestamp(),
             userId: userId,
             tourId: tourId,
             tourName: tourName
@@ -40,6 +46,7 @@ function TourService() {
         if (json) {
             json = JSON.parse(json);
         }
+
         const newJSON = {
             days: json["duration"],
             people: tourType()[json["RoomType"]],
@@ -59,7 +66,22 @@ function TourService() {
         storeDataInFirestore(
             {userId: json["UserId"], tourId: tour.tourId, tourName: tour.tourName}
         ).then((ele) => {
-            showPopup("success", "Success", "Tour Successfully Booked");
+            const publishJSON = {
+                "type": "PUBLISH_MESSAGES",
+                "values": {
+                    "project_id": projectID,
+                    "topic_id": localStorage.getItem("CurrentUser").split("@")[0],
+                    "message": "Tour with id " + tour.tourId + " successfully booked"
+                }
+            };
+            axios.post(pubSubURL, publishJSON).then((ele) => {
+                console.log(ele);
+            }).catch((err) => {
+                console.log(err);
+            });
+            showPopup("success", "Success", "Tour Successfully Booked", () => {
+                history.push(routes.invoice);
+            });
         });
     }
     return (
@@ -70,7 +92,8 @@ function TourService() {
                     {tours.map((tour) => {
                         return (
                             <li className="mb-2">
-                                <span className="mr-4">{tour.tourName}</span>
+                                <div className="mr-4">{tour.tourName}</div>
+                                <div className="mr-4">{tour.tourDescription}</div>
                                 <Button onClick={() => bookTour(tour)}>Book</Button>
                             </li>
                         )

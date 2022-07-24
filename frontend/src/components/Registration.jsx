@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Auth } from "aws-amplify";
 import axios from 'axios'
-import {routes} from "../constants";
+import {projectID, pubSubURL, routes} from "../constants";
 
 export class Register extends Component {
   state = {
@@ -55,15 +55,45 @@ export class Register extends Component {
       }
       try {
         const response = await Auth.signUp(userDetails);
+        const json = {
+          "type": "CREATE_TOPIC",
+          "values": {
+            "project_id": projectID,
+            "topic_id": registeredEmail.split("@")[0]
+          }
+        };
+
+        axios.post(pubSubURL, json).then((ele) => {
+
+          const newJSON = {
+            "type": "CREATE_SUBSCRIPTION",
+            "values": {
+              "project_id": projectID,
+              "topic_id": registeredEmail.split("@")[0],
+              "subscription_id": registeredEmail.split("@")[0] + "-subscription"
+            }
+          };
+
+          axios.post(pubSubURL, newJSON).then((ele) => {
+              console.log(ele);
+            alert("Please verify your email and then log in!")
+            localStorage.setItem("LoggedStatus", false)
+            document.location.href = routes.login
+          }).catch((err) => {
+            console.log(err);
+          });
+
+        }).catch((err) => {
+          console.log(err);
+        });
+
         axios.post("https://pvbe4bzseyw3j7z2zu75tdrhhy0qphrg.lambda-url.us-east-1.on.aws/", dynamoObject).then((resp) => {
           console.log(resp)
         })
         const abc = await axios.post("https://us-central1-serverlessprojects22.cloudfunctions.net/storeCipher", firestoreObject).then((resp) => {
           console.log(resp)
         })
-        alert("Please verify your email and then log in!")
-        localStorage.setItem("LoggedStatus", false)
-        document.location.href = routes.login
+
       } catch (cloud_error) {
         this.validateForm(cloud_error)
       }
@@ -80,7 +110,7 @@ export class Register extends Component {
       })
       return false;
     }else{
-        if(this.state.registeredEmail.length == 0 || this.state.password.length == 0 || this.state.confirmpassword.length == 0 
+        if(this.state.registeredEmail.length == 0 || this.state.password.length == 0 || this.state.confirmpassword.length == 0
           || this.state.securityAnswer1.length == 0 || this.state.securityAnswer2.length == 0 || this.state.securityAnswer3.length == 0)
         {
           alert("Please fill in all the form fields!");
