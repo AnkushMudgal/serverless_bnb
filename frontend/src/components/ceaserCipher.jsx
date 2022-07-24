@@ -5,8 +5,8 @@ import TextField from "@mui/material/TextField"
 import Button from "@mui/material/Button"
 import { FormLabel } from "@mui/material"
 import axios from "axios"
-import {useHistory} from "react-router-dom";
-import {routes} from "../constants";
+import { useHistory } from "react-router-dom";
+import { routes } from "../constants";
 
 export default function CeaserCipherAuth() {
     const paperStyle = {
