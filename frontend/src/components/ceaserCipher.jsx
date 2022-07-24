@@ -49,14 +49,15 @@ export default function CeaserCipherAuth() {
                 "https://us-central1-b00904831-a4-partb.cloudfunctions.net/ceaserCipher/decryptCipher",
                 {
                     encryptedCode: encryptedCipher,
-                    emailID: localStorage.getItem("CurrentUser"),
+                    emailID: localStorage.getItem("email"),
                     decryptedCode: decryptedCipher
                 }
             )
             .then((res) => {
                 if (res.data && res.data.mactched) {
                     history.push(routes.home);
-                    localStorage.setItem("LoggedStatus", true)
+                    localStorage.setItem("LoggedStatus", true);
+                    localStorage.setItem("CurrentUser", localStorage.getItem("email"));
                 } else setErrorMessage("Incorrect Decrypted Cipher Text Entered")
             })
 
