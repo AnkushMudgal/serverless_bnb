@@ -1,0 +1,167 @@
+<! doctype html5>
+<html>
+
+<head>
+    <title> General User Bot </title>
+    <script type='text/javascript' src='./aws-sdk-2.1176.0.js'></script>
+    <script type="text/javascript" src="./general_creds.js"></script>
+    <style language="text/css">
+        input#wisdom {
+            padding: 4px;
+            font-size: 1em;
+            width: 400px
+        }
+
+        input::placeholder {
+            color: #ccc;
+            font-style: italic;
+        }
+
+        p.userRequest {
+            margin: 4px;
+            padding: 4px 10px 4px 10px;
+            border-radius: 4px;
+            text-align: left;
+            min-width: 50%;
+            max-width: 85%;
+            float: left;
+            background-color: #ee6929;
+        }
+
+        p.lexResponse {
+            margin: 4px;
+            padding: 4px 10px 4px 10px;
+            border-radius: 4px;
+            text-align: right;
+            min-width: 50%;
+            max-width: 85%;
+            float: right;
+            background-color: #fd9f02;
+            font-style: italic;
+        }
+
+        p.lexError {
+            margin: 4px;
+            padding: 4px 10px 4px 10px;
+            border-radius: 4px;
+            text-align: right;
+            min-width: 50%;
+            max-width: 85%;
+            float: right;
+            background-color: #5d5959;
+        }
+
+
+    </style>
+</head>
+
+<body>
+<h1 style="text-align: -webkit-center"> Serverless B&B General User Bot </h1>
+<center><p style="width: 100%; text-align: -webkit-center">
+    This chat bot lets General Users check room availability and perform site navigation.
+</p>
+    <div id="conversation" style="width: 100%; height: 60%; border: 1px solid #ccc; background-color: #ffffff; padding: 4px; overflow: scroll" ></div>
+</center>
+
+<form id="chatform" style="margin-top: 20px; text-align: -webkit-center" onsubmit="return pushChat();">
+    <input type="text" id="wisdom" size="100" value="" placeholder="What can I help with today?">
+</form>
+<script type="text/javascript">
+
+    document.getElementById("wisdom").focus();
+
+    // Initialize the Amazon Cognito credentials provider
+    AWS.config.region = 'us-east-1'; // Region
+    AWS.config.credentials = new AWS.Credentials(aws_access_key_id, aws_secret_access_key, aws_session_token);
+
+    const lexruntime = new AWS.LexRuntimeV2();
+    const lexUserId = 'chatbot-demo' + Date.now();
+
+    function pushChat() {
+        let first = true;
+        console.log(first)
+
+        // if there is text to be sent...
+        const wisdomText = document.getElementById('wisdom');
+        if (wisdomText && wisdomText.value && wisdomText.value.trim().length > 0) {
+
+            // disable input to show we're sending it
+            const wisdom = wisdomText.value.trim();
+            wisdomText.value = '...';
+            wisdomText.locked = true;
+
+            let sessionAttributes = {"UserID" :  "Anush Mudgal"}
+            let attributes = {"sessionAttributes": sessionAttributes}
+
+            // send it to the Lex runtime
+            const params = {
+                botAliasId: bot_alias_id,
+                botId: bot_id,
+                text: wisdom,
+                sessionState : attributes,
+                sessionId: lexUserId,
+                localeId: 'en_US'
+            };
+            showRequest(wisdom);
+            lexruntime.recognizeText(params, function(err, data) {
+                if (err) {
+                    console.log(err, err.stack);
+                    showError('Error:  ' + err.message + ' (see console for details)')
+                }
+                if (data) {
+
+                    console.log(data.messages[0].content)
+                    messages = data.messages;
+                    showResponse(data);
+                }
+                // re-enable input
+                wisdomText.value = '';
+                wisdomText.locked = false;
+            });
+        }
+        // we always cancel form submission
+        return false;
+    }
+
+    function showRequest(daText) {
+
+        const conversationDiv = document.getElementById('conversation');
+        const requestPara = document.createElement("P");
+        requestPara.className = 'userRequest';
+        requestPara.appendChild(document.createTextNode(daText));
+        conversationDiv.appendChild(requestPara);
+        conversationDiv.scrollTop = conversationDiv.scrollHeight;
+    }
+
+    function showError(daText) {
+
+        const conversationDiv = document.getElementById('conversation');
+        const errorPara = document.createElement("P");
+        errorPara.className = 'lexError';
+        errorPara.appendChild(document.createTextNode(daText));
+        conversationDiv.appendChild(errorPara);
+        conversationDiv.scrollTop = conversationDiv.scrollHeight;
+    }
+
+    function showResponse(lexResponse) {
+
+        const conversationDiv = document.getElementById('conversation');
+        const responsePara = document.createElement("P");
+        responsePara.className = 'lexResponse';
+        if (lexResponse.messages) {
+            responsePara.innerHTML = lexResponse.messages[0].content.replace(/"/g, '\'');
+            //responsePara.appendChild(document.createTextNode(lexResponse.messages[0].content));
+            responsePara.appendChild(document.createElement('br'));
+        }
+        if (lexResponse.dialogState === 'ReadyForFulfillment') {
+            responsePara.appendChild(document.createTextNode(
+                'Ready for fulfillment'));
+            // TODO:  show slot values
+        }
+        conversationDiv.appendChild(responsePara);
+        conversationDiv.scrollTop = conversationDiv.scrollHeight;
+    }
+</script>
+</body>
+
+</html>
