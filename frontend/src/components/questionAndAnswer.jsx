@@ -32,15 +32,15 @@ export default function QuestionAndAnswer() {
             security_details: [
                 {
                     securityAnswer: securityAnswer1,
-                    securityQuestion: "q1",
+                    securityQuestion: "What city were you born in?",
                 },
                 {
                     securityAnswer: securityAnswer2,
-                    securityQuestion: "q2",
+                    securityQuestion: "What is your mother's maiden name?",
                 },
                 {
                     securityAnswer: securityAnswer3,
-                    securityQuestion: "q3",
+                    securityQuestion: "What is your favourite colour?",
                 },
             ],
         }
