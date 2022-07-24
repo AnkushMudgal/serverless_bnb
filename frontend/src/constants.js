@@ -29,3 +29,7 @@ export const tourType = () => {
         Queen: 3
     }
 };
+
+export const projectID = "serverless-5410-b00885768"
+
+export const pubSubURL = "https://us-central1-serverless-5410-b00885768.cloudfunctions.net/message-passing";

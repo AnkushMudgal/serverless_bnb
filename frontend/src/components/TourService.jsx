@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {routes, showPopup, tourType} from "../constants";
+import {projectID, pubSubURL, routes, showPopup, tourType} from "../constants";
 import axios from "axios";
 import {addDoc, collection} from 'firebase/firestore';
 import {firestoreDB} from "../firebase-config";
@@ -58,6 +58,19 @@ function TourService() {
         storeDataInFirestore(
             {userId: json["UserId"], tourId: tour.tourId, tourName: tour.tourName}
         ).then((ele) => {
+            const json = {
+                "type": "PUBLISH_MESSAGES",
+                "values": {
+                    "project_id": projectID,
+                    "topic_id": localStorage.getItem("CurrentUser").split("@")[0],
+                    "message": "Tour with id " + tour.tourId + " successfully booked"
+                }
+            };
+            axios.post(pubSubURL, json).then((ele) => {
+                console.log(ele);
+            }).catch((err) => {
+                console.log(err);
+            });
             showPopup("success", "Success", "Tour Successfully Booked");
         });
     }

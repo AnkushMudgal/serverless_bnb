@@ -22,7 +22,7 @@ function Notification() {
                     "type": "PULL_MESSAGES",
                     "values": {
                         "project_id": "serverless-5410-b00885768",
-                        "subscription_id": "food-order-subscription",
+                        "subscription_id": localStorage.getItem("CurrentUser").split("@")[0],
                         "num_messages": 10
                     }
                 }).then((res) => {

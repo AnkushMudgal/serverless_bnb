@@ -1,34 +1,42 @@
 import {Notification} from "./Notification";
-import { Auth } from 'aws-amplify';
+import {Auth} from 'aws-amplify';
 import axios from "axios";
 
 function CustomNavBar() {
     const logout = async (event) => {
         event.preventDefault();
         try {
-          Auth.signOut();
-          axios.post("https://us-central1-serverlessprojects22.cloudfunctions.net/updateStatus", {
-            email_id: localStorage.getItem('CurrentUser'),
-            logged_in: true
-          })
+            Auth.signOut();
+            axios.post("https://us-central1-serverlessprojects22.cloudfunctions.net/updateStatus", {
+                email_id: localStorage.getItem('CurrentUser'),
+                logged_in: true
+            })
             localStorage.setItem("LoggedStatus", false)
-          document.location.href = "/";
-        }catch(error) {
-          console.log(error);
+            document.location.href = "/";
+        } catch (error) {
+            console.log(error);
         }
-      }
+    }
+
+    const unAuthRoutes = ["register", "login", "forgotpassword", "changepassword", "question-Answer", "ceaser-cipher"];
+
+    const item = window.location.href.split("/");
+    const lastItem = item[item.length - 1];
+
+
+    console.log(lastItem);
     return (
         <nav className="navbar navbar-dark bg-dark p-2 d-flex justify-content-between">
             <div>Bed & Breakfast</div>
             <div className="buttons">
                 {localStorage.getItem("LoggedStatus") == "true" ?
-               (
-                  <div onClick={logout} className="button is-dark">
-                    Log out
-                  </div>
-                ): (
+                    (
+                        <div onClick={logout} className="button is-dark">
+                            Log out
+                        </div>
+                    ) : (
                         <div>
-                            <a href="/register"className="button is-dark">
+                            <a href="/register" className="button is-dark">
                                 <strong>Register</strong>
                             </a>
                             <a href="/login" className="button is-dark">
@@ -37,7 +45,7 @@ function CustomNavBar() {
                         </div>
                     )}
             </div>
-            <Notification/>
+            {!unAuthRoutes.includes(lastItem) ? <Notification/> : null}
         </nav>
     )
 }
