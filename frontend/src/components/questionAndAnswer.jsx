@@ -28,7 +28,7 @@ export default function QuestionAndAnswer() {
 
     const handleSubmit = async (e) => {
         const securityDetails = {
-            email_id: localStorage.getItem("CurrentUser"),
+            email_id: localStorage.getItem("email"),
             security_details: [
                 {
                     securityAnswer: securityAnswer1,
