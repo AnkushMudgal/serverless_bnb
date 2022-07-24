@@ -1,11 +1,12 @@
 import {useEffect, useState} from "react";
 import {projectID, pubSubURL, routes, showPopup, tourType} from "../constants";
 import axios from "axios";
-import {addDoc, collection} from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import {addDoc, collection,} from 'firebase/firestore';
 import {firestoreDB} from "../firebase-config";
 import {Loader} from "./Loader";
 import {Button} from "react-bootstrap";
-import {useHistory} from "react-router-dom";
+
 
 const storeDataInFirestore = async ({userId, tourId, tourName}) => {
     try {
