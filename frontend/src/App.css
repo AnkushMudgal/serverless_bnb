@@ -43,9 +43,10 @@ body {
 }
 
 #bot {
-    bottom: 0;
+    bottom: 10px;
     position: absolute;
-    right: 0;
+    right: 10px;
+    width: 400px;
     height: 600px;
     background: cadetblue;
 }
