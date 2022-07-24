@@ -12,6 +12,8 @@ import CeaserCipherAuth from "../ceaserCipher";
 import {Analytics} from "../Analytics"
 import {TourService} from "../TourService";
 import {Invoice} from "../Invoice";
+import { UserStats } from "../UserStats"
+
 
 function Routing() {
     return (
@@ -63,6 +65,10 @@ function Routing() {
 
                 <Route exact path="/analysis">
                     <Analytics/>
+                </Route>
+
+                <Route exact path="/user-stats">
+                    <UserStats />
                 </Route>
 
             </Switch>
