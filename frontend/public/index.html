@@ -37,7 +37,11 @@
       if (unAuthRoutes.includes(lastItem)) {
           document.getElementById("bot").src = "general_bot.html";
       } else {
-          document.getElementById("bot").src = "bot.html";
+          if (["analysis", "user-stats"].includes(lastItem)) {
+            document.getElementById("bot").remove()
+          } else {
+            document.getElementById("bot").src = "bot.html";
+          }
       }
     </script>
     <!--
