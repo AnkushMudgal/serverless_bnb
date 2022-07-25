@@ -1,3 +1,5 @@
+# Author Abhishek Uppe
+
 import google.api_core.exceptions
 from google.api_core import retry
 from google.cloud import pubsub_v1
@@ -5,15 +7,11 @@ from google.oauth2 import service_account
 
 
 def get_publisher_client():
-    cred = service_account.Credentials.from_service_account_file(
-        filename='serverless-5410-b00885768-b44ede3d01d5.json')
-    return pubsub_v1.PublisherClient(credentials=cred)
+    return pubsub_v1.PublisherClient()
 
 
 def get_subscription_client():
-    cred = service_account.Credentials.from_service_account_file(
-        filename='serverless-5410-b00885768-b44ede3d01d5.json')
-    return pubsub_v1.SubscriberClient(credentials=cred)
+    return pubsub_v1.SubscriberClient()
 
 
 def create_topic(project_id, topic_id):
@@ -57,6 +55,7 @@ def pull_messages(project_id, subscription_id, num_messages):
     subscription_path = subscriber.subscription_path(project_id, subscription_id)
 
     with subscriber:
+
         response = subscriber.pull(
             request={"subscription": subscription_path, "max_messages": num_messages},
             retry=retry.Retry(deadline=300),
@@ -78,7 +77,6 @@ def pull_messages(project_id, subscription_id, num_messages):
 
         return {"success": messages}
 
-
 def message_passing(request):
     """Responds to any HTTP request.
     Args:
@@ -90,18 +88,18 @@ def message_passing(request):
     """
 
     if request.method == 'OPTIONS':
-            headers = {
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': '*',
-                'Access-Control-Allow-Headers': 'Content-Type',
-                'Access-Control-Max-Age': '3600'
-            }
-
-            return '', 204, headers
-
         headers = {
-            'Access-Control-Allow-Origin': '*'
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '3600'
         }
+
+        return '', 204, headers
+
+    headers = {
+        'Access-Control-Allow-Origin': '*'
+    }
 
     request_json = request.get_json()
     response = {}
@@ -113,14 +111,14 @@ def message_passing(request):
             response = create_subscription(values["project_id"], values["topic_id"], values['subscription_id'])
         elif current_type == "PUBLISH_MESSAGES":
             response = publish_messages(values["project_id"], values["topic_id"], values['message'])
+        elif current_type == "PULL_MESSAGES":
+            response = pull_messages(values["project_id"], values["subscription_id"], values['num_messages'])
 
     return response, 200, headers
 
 
 if __name__ == "__main__":
     project_id = "serverless-5410-b00885768"
-    topic_id = "food-order"
-    subscription_id = "food-order-subscription"
 
     # print(create_topic(project_id, topic_id))
     # print(create_subscription(project_id, topic_id, subscription_id))
